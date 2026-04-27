@@ -47,6 +47,7 @@ class Department(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="managed_departments",
     )
 
     manager_start_date = models.DateField()
