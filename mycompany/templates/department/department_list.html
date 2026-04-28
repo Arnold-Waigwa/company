@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% if department_list %}
+    <table border="1">
+      <caption>
+        <strong>Department List</strong>
+      </caption>
+      <thead>
+        <tr>
+          <th><strong>Department Name</strong></th>
+          <th><strong>Department Number</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for department in department_list %}
+        <tr>
+          <th><strong>{{department.department_name}}</strong></th>
+          <td>{{department.department_number}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h1>NO DEPARTMENTS AVAILABLE</h1>
+    {% endif %}
+  </body>
+</html>

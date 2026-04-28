@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 
 class SexChoices(models.TextChoices):
@@ -70,6 +71,18 @@ class Department(models.Model):
 
     manager_start_date = models.DateField()
 
+    def __str__(self):
+        return f"{self.department_number}, {self.department_name}"
+    
+    @property
+    def as_dict(self):
+        return {
+            "Department Name": self.department_name,
+            "Department Number": self.department_number,
+            "Manager": f"{self.manager.first_name} {self.manager.last_name}" if self.manager else "None",
+            "Manager Start Date": self.manager_start_date if self.manager_start_date else "None"
+        }
+
 class Project(models.Model):
     project_name = models.CharField(unique=True, max_length=50)
     project_number = models.IntegerField(primary_key=True)
@@ -80,6 +93,7 @@ class Project(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
+
 
 class WorksOn(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
