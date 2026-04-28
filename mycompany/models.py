@@ -36,7 +36,8 @@ class Employee(models.Model):
         "Department",
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        related_name="employees"
     )
 
     def __str__(self):
@@ -54,8 +55,16 @@ class Employee(models.Model):
             "Sex": self.get_sex_display() if self.sex else "N/A",
             "Salary": f"${self.salary}",
             "Supervisor": f"{self.supervisor.first_name} {self.supervisor.last_name}" if self.supervisor else "None",
-            "Department": self.department.department_name if self.department else "None"
-        }
+            "Department": self.department.department_name if self.department else "None",
+            "Projects": [
+                    {
+                      "name": work.project.project_name,
+                      "number": work.project.project_number,
+                      "hours": work.hours
+                    }
+                    for work in self.works_on.all()
+                ]
+            }
     
 class Department(models.Model):
     department_name = models.CharField(max_length=50, unique=True)
@@ -80,8 +89,18 @@ class Department(models.Model):
             "Department Name": self.department_name,
             "Department Number": self.department_number,
             "Manager": f"{self.manager.first_name} {self.manager.last_name}" if self.manager else "None",
-            "Manager Start Date": self.manager_start_date if self.manager_start_date else "None"
-        }
+            "Manager Start Date": self.manager_start_date if self.manager_start_date else "None",
+            "Locations": ", ".join([loc.location for loc in self.locations.all()]) or "None",
+            "Employees": ", ".join(f"{emp.first_name} {emp.last_name}"for emp in self.employees.all()) or "None",
+            "Projects": [
+                    {
+                      "name": p.project_name,
+                      "number": p.project_number,
+                      "location": p.project_location
+                    }
+                    for p in self.projects.all()
+                  ]
+            }
 
 class Project(models.Model):
     project_name = models.CharField(unique=True, max_length=50)
@@ -92,12 +111,16 @@ class Project(models.Model):
         Department,
         null=True,
         on_delete=models.CASCADE,
+        related_name="projects"
     )
+
+    def __str__(self):
+        return f"{self.project_number} - {self.project_name}"
 
 
 class WorksOn(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="works_on")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="works_on")
 
     hours = models.FloatField()
 
@@ -110,7 +133,7 @@ class WorksOn(models.Model):
         ]
 
 class DeptLocation(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name="locations")
     location = models.CharField(max_length=100)
 
     class Meta:

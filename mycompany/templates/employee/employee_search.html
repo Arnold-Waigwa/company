@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form method="GET">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search employees..."
+        value="{{ query }}"
+      />
+      <button type="submit">Search</button>
+    </form>
+    <hr />
+    {% if employees %} {% for employee in employees %}
+    <p>
+      <a href="{% url 'mycompany:employee_details' employee.ssn %}">
+        {{ employee.first_name }} {{ employee.last_name }}
+      </a>
+    </p>
+    {% endfor %} {% else %}
+    <p>No employees found.</p>
+    {% endif %}
+  </body>
+</html>

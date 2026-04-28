@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from .models import Employee, Department
+from .models import Employee, Department, Project
+from django.views.generic import ListView, DetailView
+from django.db.models import Q
 
 # Create your views here.
 #request comes in like GET /Employee-list
@@ -22,3 +23,29 @@ def department_list(request):
 def department_details(request, id):
     department = get_object_or_404(Department, department_number=id)
     return render(request, "department/department_details.html", {"department" : department})
+
+class ProjectListView(ListView):
+    model = Project
+    template_name = "project/project_list.html"
+    context_object_name = "projects"
+
+
+class ProjectDetailView(DetailView):
+    model = Project
+    template_name = "project/project_details.html"
+    context_object_name = "project"
+
+class EmployeeSearchView(ListView):
+    model = Employee
+    template_name = "employee/employee_search.html"
+    context_object_name = "employees"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", "")
+        if query:
+            return Employee.objects.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(ssn__icontains=query)
+            )
+        return Employee.objects.none()

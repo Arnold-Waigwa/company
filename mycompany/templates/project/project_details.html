@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project details</title>
+  </head>
+
+  <body>
+    <nav>
+      <a href="{% url 'mycompany:employee_list' %}">Home</a>
+    </nav>
+
+    <table border="1">
+      <caption>
+        <strong>{{ project.project_name }} Details</strong>
+      </caption>
+
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><strong>Project Number</strong></td>
+          <td>{{ project.project_number }}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Project Location</strong></td>
+          <td>{{ project.project_location }}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Department</strong></td>
+          <td>{{ project.department.department_name }}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Employees</strong></td>
+          <td>
+            {% if project.works_on.all %}
+            <ul>
+              {% for work in project.works_on.all %}
+              <li>
+                {{ work.employee.first_name }} {{ work.employee.last_name }} —
+                {{ work.hours }} hours
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %} None {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
