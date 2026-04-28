@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee List</title>
+  </head>
+  <body>
+    {% if employee_list %} {% for employee in employee_list %}
+    <p>
+      <a href="{% url 'mycompany:employee_details' employee.ssn %}"
+        >{{ employee.ssn }} : {{ employee.first_name }}</a
+      >
+    </p>
+    {% endfor %} {% else %}
+    <p>No employees found.</p>
+    {% endif %}
+  </body>
+</html>

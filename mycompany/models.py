@@ -38,6 +38,24 @@ class Employee(models.Model):
         on_delete=models.SET_NULL
     )
 
+    def __str__(self):
+        return f"{self.ssn} - {self.first_name} {self.last_name}"
+    
+    @property
+    def as_dict(self):
+        return {
+            "SSN": self.ssn,
+            "First Name": self.first_name,
+            "Middle Initial": self.middle_initial or "N/A",
+            "Last Name": self.last_name,
+            "Address": self.address,
+            "Birth Date": self.birth_date,
+            "Sex": self.get_sex_display() if self.sex else "N/A",
+            "Salary": f"${self.salary}",
+            "Supervisor": f"{self.supervisor.first_name} {self.supervisor.last_name}" if self.supervisor else "None",
+            "Department": self.department.department_name if self.department else "None"
+        }
+    
 class Department(models.Model):
     department_name = models.CharField(max_length=50, unique=True)
     department_number = models.CharField(primary_key=True, max_length=10)
