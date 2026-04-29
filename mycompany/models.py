@@ -122,7 +122,7 @@ class WorksOn(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="works_on")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="works_on")
 
-    hours = models.FloatField()
+    hours = models.FloatField(null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -131,6 +131,9 @@ class WorksOn(models.Model):
                 name="unique_employee_project"
             )
         ]
+    
+    def __str__(self):
+        return f"{self.employee} - {self.project}"
 
 class DeptLocation(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name="locations")
@@ -143,13 +146,21 @@ class DeptLocation(models.Model):
                 name="unique_department_location"
             )
         ]
+    
+    def __str__(self):
+        return f"{self.department} - {self.location}"
 
 
 class Dependent(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     dependent_name = models.CharField(max_length=100)
-    sex = models.CharField(max_length=1, null=True, blank=True)
+    sex = models.CharField(
+        max_length=1,
+        choices=SexChoices.choices,
+        null=True,
+        blank=True
+    )
     birth_date = models.DateField()
     relationship = models.CharField(max_length=50)
 
@@ -160,3 +171,6 @@ class Dependent(models.Model):
                 name="unique_dependent"
             )
         ]
+    
+    def __str__(self):
+        return f"{self.dependent_name} -> Relationship : {self.relationship}"

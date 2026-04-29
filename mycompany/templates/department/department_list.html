@@ -1,33 +1,49 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Departments</h2>
+    </div>
+
     {% if department_list %}
-    <table border="1">
-      <caption>
-        <strong>Department List</strong>
-      </caption>
-      <thead>
-        <tr>
-          <th><strong>Department Name</strong></th>
-          <th><strong>Department Number</strong></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for department in department_list %}
-        <tr>
-          <th><strong>{{department.department_name}}</strong></th>
-          <td>{{department.department_number}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col" class="ps-4">Department Name</th>
+                <th scope="col">Department Number</th>
+                <th scope="col" class="text-end pe-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for department in department_list %}
+              <tr>
+                <td class="ps-4 fw-bold">{{ department.department_name }}</td>
+                <td><span class="badge bg-secondary">#{{ department.department_number }}</span></td>
+                <td class="text-end pe-4">
+                  <a href="{% url 'mycompany:department_details' department.department_number %}" class="btn btn-sm btn-outline-primary">
+                    View Details
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     {% else %}
-    <h1>NO DEPARTMENTS AVAILABLE</h1>
+    <div class="alert alert-warning text-center" role="alert">
+      <h4 class="alert-heading">No Departments Found</h4>
+      <p class="mb-0">There are currently no departments available in the system.</p>
+    </div>
     {% endif %}
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}

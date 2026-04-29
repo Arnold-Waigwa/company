@@ -1,29 +1,47 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <form method="GET">
-      <input
-        type="text"
-        name="q"
-        placeholder="Search employees..."
-        value="{{ query }}"
-      />
-      <button type="submit">Search</button>
-    </form>
-    <hr />
-    {% if employees %} {% for employee in employees %}
-    <p>
-      <a href="{% url 'mycompany:employee_details' employee.ssn %}">
-        {{ employee.first_name }} {{ employee.last_name }}
-      </a>
-    </p>
-    {% endfor %} {% else %}
-    <p>No employees found.</p>
+{% extends "base.html" %}
+
+{% block title %}Search Employees{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title mb-3">Search Employees</h3>
+        <form method="GET" class="d-flex">
+          <div class="input-group">
+            <input
+              type="text"
+              name="q"
+              class="form-control"
+              placeholder="Search employees by name or SSN..."
+              value="{{ query }}"
+            />
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if employees %}
+      <div class="list-group shadow-sm">
+        {% for employee in employees %}
+        <a href="{% url 'mycompany:employee_details' employee.ssn %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="mb-1">{{ employee.first_name }} {{ employee.last_name }}</h5>
+            <small class="text-muted">SSN: {{ employee.ssn }}</small>
+          </div>
+          <span class="badge bg-primary rounded-pill">View Details</span>
+        </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      {% if query %}
+      <div class="alert alert-warning text-center" role="alert">
+        No employees found matching "{{ query }}".
+      </div>
+      {% endif %}
     {% endif %}
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}

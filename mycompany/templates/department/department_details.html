@@ -1,30 +1,45 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Department details</title>
-  </head>
-  <body>
-    <nav><a href="{% url 'mycompany:employee_list' %}">Home</a></nav>
-    <table border="1">
-      <caption>
-        <strong>{{department.department_name}} Details</strong>
-      </caption>
-      <thead>
-        <tr>
-          <th>Field</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for key, value in department.as_dict.items %}
-        <tr>
-          <td><strong>{{ key }}</strong></td>
-          <td>{{ value }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Department Details{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>{{ department.department_name }} Details</h2>
+      <a href="{% url 'mycompany:department_list' %}" class="btn btn-outline-secondary">&larr; Back to Departments</a>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" style="width: 30%;">Field</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in department.as_dict.items %}
+            <tr>
+              <td class="fw-bold align-middle">{{ key }}</td>
+              <td class="align-middle">
+                {% if key == "Projects" and value %}
+                  <ul class="list-unstyled mb-0">
+                    {% for p in value %}
+                      <li><strong>{{ p.name }}</strong> (#{{ p.number }}) - <span class="text-muted">{{ p.location }}</span></li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  {{ value }}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
