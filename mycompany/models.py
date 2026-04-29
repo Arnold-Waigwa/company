@@ -63,7 +63,16 @@ class Employee(models.Model):
                       "hours": work.hours
                     }
                     for work in self.works_on.all()
-                ]
+                ],
+            "Dependents": [
+                {
+                  "name": dep.dependent_name,
+                  "relationship": dep.relationship,
+                  "birth_date": dep.birth_date,
+                  "sex": dep.get_sex_display() if dep.sex else "N/A"
+                }
+                for dep in self.dependents.all()
+            ]
             }
     
 class Department(models.Model):
@@ -152,7 +161,7 @@ class DeptLocation(models.Model):
 
 
 class Dependent(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="dependents")
 
     dependent_name = models.CharField(max_length=100)
     sex = models.CharField(

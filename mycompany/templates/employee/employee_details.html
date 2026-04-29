@@ -2,22 +2,47 @@
 
 {% block content %}
 
-<h2>{{ employee.first_name }} {{ employee.last_name }}</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>{{ employee.first_name }} {{ employee.last_name }} Details</h2>
+  <a href="{% url 'mycompany:employee_list' %}" class="btn btn-outline-secondary">&larr; Back to Employees</a>
+</div>
 
 <div class="card p-3 shadow-sm">
   {% for key, value in employee.as_dict.items %}
-    <div class="row mb-2">
-      <div class="col-3 fw-bold">{{ key }}</div>
-      <div class="col">
+    <div class="row mb-2 border-bottom pb-2">
+      <div class="col-sm-3 fw-bold align-self-center">{{ key }}</div>
+      <div class="col-sm-9 align-self-center">
+        
         {% if key == "Projects" %}
-          <ul>
-            {% for p in value %}
-              <li>{{ p.name }} — {{ p.hours }}h</li>
-            {% endfor %}
-          </ul>
+          {% if value %}
+            <ul class="list-unstyled mb-0">
+              {% for p in value %}
+                <li><strong>{{ p.name }}</strong> <span class="text-muted">— {{ p.hours }}h</span></li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-muted">None</span>
+          {% endif %}
+
+        {% elif key == "Dependents" %}
+          {% if value %}
+            <ul class="list-unstyled mb-0">
+              {% for dep in value %}
+                <li class="mb-1">
+                  <strong>{{ dep.name }}</strong> 
+                  <span class="badge bg-secondary ms-1">{{ dep.relationship }}</span> 
+                  <small class="text-muted d-block" style="font-size: 0.8em;">Sex: {{ dep.sex }} | Born: {{ dep.birth_date|date:"F d, Y" }}</small>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-muted">None</span>
+          {% endif %}
+
         {% else %}
           {{ value }}
         {% endif %}
+
       </div>
     </div>
   {% endfor %}

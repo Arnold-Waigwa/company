@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.db.models import Q
 
 # Create your views here.
-#request comes in like GET /Employee-list
+#request comes in like GET /
 def employee_list(request):
     #fetch all employee
     employees = Employee.objects.all()
